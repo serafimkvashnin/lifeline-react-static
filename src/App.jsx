@@ -15,14 +15,16 @@ const getMonthName = (date) => date.toLocaleString("default", {"month": "long"})
 const getDayName = (date, day) => new Date(date.getFullYear(), date.getMonth() + 1, day).toLocaleString("default", {"weekday": "long"})
 
 const saveHabitsData = (data) => localStorage.data = JSON.stringify(data)
-const loadHabitsData = () => JSON.parse(localStorage.data)
+const loadHabitsData = () => {
+  if (localStorage.getItem("data") === null) {
+    return exampleHabits
+  } else {
+    return JSON.parse(localStorage.data)
+  }
+}
 
 const App = () => {
-  const habitsData = loadHabitsData()
-  if (habitsData === undefined) {
-    habitsData = exampleHabits
-  }
-  const [ habits, setHabits ] = useState(habitsData)
+  const [ habits, setHabits ] = useState(loadHabitsData())
   const [ date, setDate ] = useState(new Date())
 
   const handleHabitDayClick = (habit, month, day) => {
