@@ -1,0 +1,11 @@
+table {
+    border-collapse: collapse;
+}
+
+th, tr, td {
+    border: 1px solid #000;
+}
+
+td.checkedDay {
+    background-color: green;
+}
