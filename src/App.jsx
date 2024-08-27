@@ -6,11 +6,7 @@ const exampleHabits = {
    
   },
   "Reading": {
-    "8": {
-        "27": {
-          status: true,
-        }
-      }
+    
   },
 }
 
@@ -22,7 +18,11 @@ const saveHabitsData = (data) => localStorage.data = JSON.stringify(data)
 const loadHabitsData = () => JSON.parse(localStorage.data)
 
 const App = () => {
-  const [ habits, setHabits ] = useState(loadHabitsData())
+  const habitsData = loadHabitsData()
+  if (habitsData === undefined) {
+    habitsData = exampleHabits
+  }
+  const [ habits, setHabits ] = useState(habitsData)
   const [ date, setDate ] = useState(new Date())
 
   const handleHabitDayClick = (habit, month, day) => {
