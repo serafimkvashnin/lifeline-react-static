@@ -1,95 +1,123 @@
-import { useState } from "react"
+import { useState } from "react";
 
 const HabitsTable = ({ date, habits, onAddHabit, onDayChecked }) => {
-  const [ showInput, setShowInput ] = useState(false)
+  const [showInput, setShowInput] = useState(false);
+
+  const today = new Date()
 
   const handleAddHabit = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     const form = new FormData(event.target);
-    setShowInput(false)
-    onAddHabit({
-      name: form.get('name')
-    })
-  }
+    setShowInput(false);
+    onAddHabit({ name: form.get("name") });
+  };
 
-  const getDayName = (date, day) => 
-    new Date(date.getFullYear(), date.getMonth(), day).toLocaleString("default", {"weekday": "long"})  
+  const getDayName = (date, day) => {
+    return new Date(year, month, day).toLocaleString("default", { weekday: "long" });
+  };
 
-  const month = date.getMonth() 
-  const days = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
-  return (
-    <table>
-      <thead>
-        <tr>
-          <th rowSpan="2">
-            Habits
-          </th>
-          {Array.from({length: days}, (_, i) => {
-            const day = i + 1
-            return <th key={day}>
+  const renderHeaderRow = () => {
+    return (
+      <tr>
+        <th rowSpan="2"><h2 className="title">Habits</h2></th>
+        {Array.from({ length: daysInMonth }, (_, i) => {
+          const day = i + 1;
+          const isToday = 
+            day === today.getDate() && 
+            month === today.getMonth() && 
+            year === today.getFullYear();
+          return (
+            <th key={day} className={isToday ? "today" : ""}>
               {getDayName(date, day).charAt(0)}
             </th>
-          })}
-        </tr>
-        <tr>
-          {Array.from({length: days}, (_, i) => {
-            const day = i + 1
-            return <th key={day}>
+          );
+        })}
+      </tr>
+    );
+  };
+
+  const renderDayRow = () => {
+    return (
+      <tr>
+        <th style={{ display:"none" }} />
+        {Array.from({ length: daysInMonth }, (_, i) => {
+          const day = i + 1;
+          const isToday = 
+            day === today.getDate() && 
+            month === today.getMonth() && 
+            year === today.getFullYear();
+          return (
+            <th key={day} className={isToday ? "today" : ""}>
               {day}
             </th>
-          })}
-        </tr>
-      </thead>
-      <tbody>
-        {Object.keys(habits).map((key) => {
-          const habit = habits[key]
-          return (
-            <tr key={key}>
-              <th key={key}>
-                {habit.name}
-              </th>
-              {Array.from({length: days}, (_, i) => {
-                const day = i + 1
-                if (month in habit && day in habit[month] && habit[month][day].status) {
-                  return (
-                    <td
-                      className="checkedDay"
-                      key={day} 
-                      onClick={() => onDayChecked(key, month, day)} 
-                    />
-                  )
-                } else {
-                  return (
-                    <td
-                      key={day} 
-                      onClick={() => onDayChecked(key, month, day)} 
-                    />
-                  )
-                }
-              })}
-            </tr>
-          )
+          );
         })}
-        <tr>
-          <th>
+      </tr>
+    );
+  };
+
+  const renderHabitRows = () => {
+    return Object.entries(habits).map(([key, habit]) => (
+      <tr key={key}>
+        <th>{habit.name}</th>
+        {renderHabitDays(key, habit)}
+      </tr>
+    ));
+  };
+
+  const renderHabitDays = (key, habit) => {
+    return Array.from({ length: daysInMonth }, (_, i) => {
+      const day = i + 1;
+      const isChecked = habit[year]?.[month]?.[day]?.status;
+      return (
+        <td
+          key={day}
+          className={isChecked ? "checked" : ""}
+          onClick={() => onDayChecked(key, year, month, day)}
+        />
+      );
+    });
+  };
+
+  const renderAddHabitRow = () => {
+    return (
+      <tr>
+        <th>
           <form onSubmit={handleAddHabit}>
-            {showInput && (
-              <input 
+            {showInput ? (
+              <input
                 autoFocus
                 name="name"
                 type="text"
                 onBlur={() => setShowInput(false)}
               />
-            )}
-            {!showInput && (
-              <button type="button" onClick={() => setShowInput(true)}>+</button>
+            ) : (
+              <button type="button" onClick={() => setShowInput(true)}>
+                +
+              </button>
             )}
           </form>
-          </th>
-        </tr>
+        </th>
+      </tr>
+    );
+  };
+
+  const year = date.getFullYear()
+  const month = date.getMonth()
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+
+  return (
+    <table>
+      <thead>
+        {renderHeaderRow()}
+        {renderDayRow()}
+      </thead>
+      <tbody>
+        {renderHabitRows()}
+        {renderAddHabitRow()}
       </tbody>
     </table>
-  )
-}
+  );
+};
 
-export default HabitsTable
+export default HabitsTable;

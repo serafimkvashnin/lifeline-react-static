@@ -11,45 +11,38 @@ const App = () => {
   const [ date, setDate ] = useState(new Date())
 
   const handleAddHabit = (habit) => {
-    const newHabits = habits.concat(habit)
-    setHabits(newHabits)
-    saveHabitsData(newHabits)
+    const updatedHabits = habits.concat(habit)
+    updateHabits(updatedHabits)
   }
 
-  const handleHabitDayChecked = (key, month, day) => {
-    const newHabits = [...habits]
-    if (month in newHabits[key]) {
-      if (day in newHabits[key][month]) {
-        newHabits[key][month][day].status = !newHabits[key][month][day].status
-      } else {
-        newHabits[key][month][day] = {
-          status: true
-        }
-      }
-    } else {
-      newHabits[key][month] = {
-        [day]: {
-          status: true
-        }
-      }
-    }
-
-    saveHabitsData(newHabits)
-    setHabits(newHabits)
+  const handleHabitDayChecked = (key, year, month, day) => {    
+    const updatedHabits = [...habits];
+    updatedHabits[key] = {
+      ...updatedHabits[key],
+      [year]: {
+        ...updatedHabits[key]?.[year],
+        [month]: {
+          ...updatedHabits[key]?.[year]?.[month],
+          [day]: {
+            status: !updatedHabits[key]?.[year]?.[month]?.[day]?.status,
+          },
+        },
+      },
+    };
+    updateHabits(updatedHabits)
   }
+
+  const updateHabits = (newHabits) => {
+    setHabits(newHabits);
+    saveHabitsData(newHabits);
+  };
 
   return (
     <div>
       <DataHandler 
         habits={habits} 
-        onDataLoaded={(data) => {
-          setHabits(data)
-          saveHabitsData(data)
-        }} 
-        onDataRemoved={() => {
-          setHabits([])
-          saveHabitsData([])
-        }}
+        onDataLoaded={(data) => updateHabits(data)} 
+        onDataRemoved={() => updateHabits([])}
       />
       <DateHeader date={date} onDateChanged={(date) => setDate(date)} />
       <HabitsTable date={date} habits={habits} onAddHabit={handleAddHabit} onDayChecked={handleHabitDayChecked} />

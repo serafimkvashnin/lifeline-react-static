@@ -1,11 +1,30 @@
+:root {
+    font-family: "Roboto", sans-serif;
+}
+
 table {
+    table-layout: fixed;
     border-collapse: collapse;
 }
 
-th, tr, td {
+th, td {
     border: 1px solid #000;
+    width: 30px;
+    height: 30px;
 }
 
-td.checkedDay {
+th .title {
+    margin: 0;
+}
+
+th:first-child, td:first-child {
+    width: 200px;
+}
+
+td.checked {
     background-color: green;
+}
+
+th.today {
+    background-color: yellowgreen;
 }
