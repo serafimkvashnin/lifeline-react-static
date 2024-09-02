@@ -17,8 +17,37 @@ th .title {
     margin: 0;
 }
 
-th:first-child, td:first-child {
+th .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button-group {
+    display: flex;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.icon-button.danger {
+    color: red;
+}
+
+th:first-child {
     width: 200px;
+    max-width: 200px;
+}
+
+th .habit-title {
+    padding: 1px 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
 }
 
 td.checked {

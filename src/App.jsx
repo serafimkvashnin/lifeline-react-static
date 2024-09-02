@@ -3,7 +3,6 @@ import './App.css'
 import DateHeader from './components/DateHeader'
 import HabitsTable from './components/HabitsTable'
 import { loadHabitsData, saveHabitsData } from './utils/storage'
-import ObjectRenderer from './components/ObjectRenderer'
 import DataHandler from './components/DataHandler'
 
 const App = () => {
@@ -15,8 +14,19 @@ const App = () => {
     updateHabits(updatedHabits)
   }
 
+  const handleEditHabit = (key, name) => {
+    const updatedHabits = [...habits]
+    updatedHabits[key].name = name
+    updateHabits(updatedHabits)
+  }
+
+  const handleRemoveHabit = (key) => {
+    const updatedHabits = [...habits.slice(0, key), ...habits.slice(key + 1)]
+    updateHabits(updatedHabits)
+  }
+
   const handleHabitDayChecked = (key, year, month, day) => {    
-    const updatedHabits = [...habits];
+    const updatedHabits = [...habits]
     updatedHabits[key] = {
       ...updatedHabits[key],
       [year]: {
@@ -28,14 +38,14 @@ const App = () => {
           },
         },
       },
-    };
+    }
     updateHabits(updatedHabits)
   }
 
   const updateHabits = (newHabits) => {
     setHabits(newHabits);
     saveHabitsData(newHabits);
-  };
+  }
 
   return (
     <div>
@@ -45,8 +55,14 @@ const App = () => {
         onDataRemoved={() => updateHabits([])}
       />
       <DateHeader date={date} onDateChanged={(date) => setDate(date)} />
-      <HabitsTable date={date} habits={habits} onAddHabit={handleAddHabit} onDayChecked={handleHabitDayChecked} />
-      <ObjectRenderer obj={habits} />
+      <HabitsTable 
+        date={date} 
+        habits={habits} 
+        onAddHabit={handleAddHabit}
+        onEditHabit={handleEditHabit}
+        onRemoveHabit={handleRemoveHabit}
+        onDayChecked={handleHabitDayChecked} 
+      />
     </div>
   )
 }

@@ -19,12 +19,12 @@ const DataHandler = ({ habits, onDataLoaded, onDataRemoved }) => {
           const json = JSON.parse(e.target.result);
           onDataLoaded(json)
         } catch (error) {
-          console.error('Error parsing JSON:', error);
+          console.error('Error parsing JSON:', error)
         }
-      };
+      }
       reader.readAsText(file);
     }
-  };
+  }
 
   return ( 
     <div>

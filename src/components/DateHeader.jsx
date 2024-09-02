@@ -14,9 +14,13 @@ const DateHeader = ({ date, onDateChanged }) => {
     return (
       <div>
          <h1>
-          <button onClick={onLeftClick}>{'<'}</button>
+          <button onClick={onLeftClick} className="icon-button">
+            <span className="material-icons">chevron_left</span>
+          </button>
           {getMonthName(date)} {date.getFullYear()}
-          <button onClick={onRightClick}>{'>'}</button>
+          <button onClick={onRightClick} className="icon-button">
+            <span className="material-icons">chevron_right</span>
+          </button>
         </h1>
       </div>
     )
